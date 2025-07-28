@@ -219,3 +219,30 @@ tbody tr:hover {
   box-shadow: none;
   padding: 0;
 }
+/* ESTILOS PARA LA SECCIÓN DE DETALLES */
+
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.details-header h3 {
+  margin: 0; /* Quitamos el margen que tenía antes */
+}
+
+.btn-export {
+  background-color: #1d6f42; /* Un verde oscuro, color de Excel */
+  color: var(--blanco);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-export:hover {
+  background-color: #144d2e;
+}

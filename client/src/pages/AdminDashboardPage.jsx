@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import apiClient from '../services/api';
 import DatePicker from 'react-datepicker';
 import { format, subDays, startOfMonth, endOfMonth, subMonths } from 'date-fns';
+import * as XLSX from 'xlsx';
 
-import BarChart from '../components/charts/BarChart';
-import DoughnutChart from '../components/charts/DoughnutChart';
 import StatsList from '../components/StatsList';
 import CreateUserForm from '../components/CreateUserForm';
 import Modal from '../components/Modal';
+import BarChart from '../components/charts/BarChart';
+import DoughnutChart from '../components/charts/DoughnutChart';
 import './AdminDashboardPage.css';
 
 const AdminDashboardPage = () => {
@@ -31,7 +32,6 @@ const AdminDashboardPage = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Función principal para obtener todas las estadísticas
   const fetchStats = useCallback(async () => {
     setLoading(true);
     const payload = {
@@ -69,7 +69,6 @@ const AdminDashboardPage = () => {
     fetchStats();
   }, [fetchStats]);
 
-  // Función para los botones de acceso rápido
   const setDateRange = (period) => {
     const today = new Date();
     if (period === 'today') {
@@ -89,7 +88,6 @@ const AdminDashboardPage = () => {
     }
   };
 
-  // Función para obtener la diferencia porcentual en las tarjetas de resumen
   const getPercentageDiff = (primary, comparison) => {
     if (comparison === 0) return { value: 'N/A', className: '' };
     const diff = ((primary - comparison) / comparison) * 100;
@@ -97,7 +95,6 @@ const AdminDashboardPage = () => {
     return { value: `${diff >= 0 ? '+' : ''}${diff.toFixed(1)}%`, className };
   };
 
-  // Función para formatear los datos para los gráficos
   const prepareChartData = (data, label) => {
     if (!data || data.length === 0) return null;
     return {
@@ -120,6 +117,31 @@ const AdminDashboardPage = () => {
         },
       ],
     };
+  };
+
+  const handleExportToExcel = () => {
+    if (!stats || !stats.details || stats.details.length === 0) {
+      alert('No hay datos para exportar.');
+      return;
+    }
+
+    const dataToExport = stats.details.map((order) => ({
+      'Fecha y Hora': format(new Date(order.timestamp), 'dd/MM/yyyy HH:mm'),
+      'Nro Pedido': order.orderNumber,
+      Transporte: order.transport,
+      Armador: order.packer,
+      Cerrador: order.closer,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Pedidos');
+
+    const fileName = `Reporte_Pedidos_${format(
+      primaryStartDate,
+      'dd-MM-yy'
+    )}_al_${format(primaryEndDate, 'dd-MM-yy')}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
   };
 
   return (
@@ -279,7 +301,7 @@ const AdminDashboardPage = () => {
                         stats.primaryData.byUser,
                         'Pedidos'
                       )}
-                      title="Pedidos por Usuario (Cerrador)"
+                      title="Pedidos por Cerrador"
                     />
                   </div>
                   <div className="report-list">
@@ -314,7 +336,16 @@ const AdminDashboardPage = () => {
 
             {stats.details && stats.details.length > 0 && (
               <div className="details-container">
-                <h3>Detalle de Pedidos del Período</h3>
+                <div className="details-header">
+                  <h3>
+                    Detalle de Pedidos del Período (
+                    {format(primaryStartDate, 'dd/MM/yyyy')} -{' '}
+                    {format(primaryEndDate, 'dd/MM/yyyy')})
+                  </h3>
+                  <button onClick={handleExportToExcel} className="btn-export">
+                    Exportar a Excel
+                  </button>
+                </div>
                 <div className="table-wrapper">
                   <table>
                     <thead>
@@ -323,7 +354,7 @@ const AdminDashboardPage = () => {
                         <th>Nro Pedido</th>
                         <th>Transporte</th>
                         <th>Armador</th>
-                        <th>Usuario (Cerrador)</th>
+                        <th>Cerrador</th>
                       </tr>
                     </thead>
                     <tbody>
