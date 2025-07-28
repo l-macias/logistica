@@ -1,0 +1,13 @@
+.admin-widget {
+  background-color: var(--blanco);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  margin-top: 2rem;
+}
+
+.admin-widget h3 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--azul-robra);
+}

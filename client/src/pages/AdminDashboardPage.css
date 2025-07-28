@@ -1,0 +1,221 @@
+.admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.admin-header h1 {
+  color: var(--azul-robra);
+}
+
+.header-nav-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-create-user,
+.btn-back {
+  background-color: var(--azul-robra);
+  color: var(--blanco);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+}
+.btn-create-user:hover,
+.btn-back:hover {
+  background-color: #08243e;
+}
+
+.controls-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 1.5rem;
+  background-color: var(--blanco);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.date-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.quick-filters {
+  display: flex;
+  gap: 0.5rem;
+}
+.quick-filters button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.quick-filters button:hover {
+  background-color: #e2e6ea;
+}
+
+.date-pickers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+.datepicker-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.datepicker-group label {
+  font-weight: 500;
+}
+.react-datepicker-wrapper input {
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 120px;
+}
+
+.comparison-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-consultar {
+  background-color: #198754;
+  color: var(--blanco);
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.btn-consultar:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.reports-grid {
+  display: grid;
+  /* Hacemos una grilla de 3 columnas para nuestras 3 listas */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  background-color: var(--blanco);
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+.stat-card h4 {
+  color: var(--gris-texto);
+  margin-bottom: 0.5rem;
+}
+.stat-card p {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--azul-robra);
+}
+.stat-card .diff {
+  font-size: 1rem;
+  font-weight: bold;
+}
+.stat-card .diff.positive {
+  color: #198754;
+}
+.stat-card .diff.negative {
+  color: #dc3545;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.details-container {
+  margin-top: 2rem;
+  background-color: var(--blanco);
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+.details-container h3 {
+  margin-bottom: 1rem;
+  color: var(--azul-robra);
+}
+.table-wrapper {
+  max-height: 400px;
+  overflow-y: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.reports-grid {
+  /* Hacemos que la grilla principal sea de una sola columna */
+  grid-template-columns: 1fr;
+}
+
+.report-item-full {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas de igual tamaño */
+  gap: 2rem;
+  background-color: var(--blanco);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  align-items: center;
+}
+
+.report-chart {
+  /* El gráfico ocupará el espacio asignado */
+  max-height: 350px; /* Limitamos la altura para que no sea gigante */
+}
+
+/* Quitamos el fondo y la sombra de la lista individual, ya que ahora está en el contenedor */
+.stats-list-widget {
+  box-shadow: none;
+  padding: 0;
+}
