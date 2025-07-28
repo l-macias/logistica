@@ -30,6 +30,12 @@ app.get('/', (req, res) => {
   res.send('¡API de logística funcionando! 🚀');
 });
 
+// --- NUEVA RUTA KEEP-ALIVE ---
+// Esta ruta solo responde que el servidor está funcionando.
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'UP' });
+});
+
 // 6. Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
