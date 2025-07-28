@@ -1,20 +1,20 @@
 import axios from 'axios';
 
+// La URL de la API se tomará de una variable de entorno
+const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 const apiClient = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// AÑADIMOS EL INTERCEPTOR
-// Esta función se ejecutará ANTES de cada petición que salga desde apiClient
+// ... (el interceptor para el token se mantiene igual)
 apiClient.interceptors.request.use(
   (config) => {
-    // Obtenemos el token de localStorage
     const token = localStorage.getItem('token');
     if (token) {
-      // Si existe, lo añadimos a las cabeceras de la petición
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;

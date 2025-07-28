@@ -26,8 +26,8 @@ const LoginPage = () => {
       <div className="login-container">
         <div className="login-header">
           {/* Podrías poner un logo aquí si quisieras */}
-          <h2>ROBRA online</h2>
-          <p>Herramienta de relevamiento</p>
+          <h2>Deposito ROBRA</h2>
+          <p>Relevamiento de pedidos</p>
         </div>
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
