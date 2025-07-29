@@ -1,20 +1,26 @@
+/* --- ESTILO BASE DE LA PÁGINA --- */
 .admin-container {
-  max-width: 1200px;
+  max-width: 1400px; /* Un poco más de ancho para aprovechar el espacio */
   margin: 0 auto;
   padding: 2rem;
+  background-color: var(--azul-robra); /* FONDO OSCURO PRINCIPAL */
+  min-height: 100vh;
+  color: var(--blanco); /* Hacemos el texto por defecto blanco */
 }
 
+/* --- CABECERA --- */
 .admin-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 1rem;
+  /* Borde sutil para fondo oscuro */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 1.5rem;
 }
 
 .admin-header h1 {
-  color: var(--azul-robra);
+  color: var(--blanco); /* Título en blanco */
 }
 
 .header-nav-buttons {
@@ -22,23 +28,26 @@
   gap: 1rem;
 }
 
+/* Botones de la cabecera con estilo invertido */
 .btn-create-user,
 .btn-back {
-  background-color: var(--azul-robra);
-  color: var(--blanco);
+  background-color: var(--blanco);
+  color: var(--azul-robra);
   border: none;
   padding: 0.6rem 1.2rem;
-  border-radius: 4px;
-  font-weight: 500;
+  border-radius: 6px;
+  font-weight: 600; /* Un poco más de peso */
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   text-decoration: none;
 }
 .btn-create-user:hover,
 .btn-back:hover {
-  background-color: #08243e;
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
 }
 
+/* --- TARJETA DE FILTROS Y CONTROLES --- */
 .controls-container {
   display: flex;
   flex-wrap: wrap;
@@ -47,9 +56,9 @@
   justify-content: space-between;
   padding: 1.5rem;
   background-color: var(--blanco);
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: none; /* Quitamos la sombra, no es necesaria */
 }
 
 .date-controls {
@@ -59,14 +68,33 @@
 }
 .quick-filters {
   display: flex;
-  gap: 0.5rem;
+  background-color: #e9ecef; /* Un fondo contenedor sutil */
+  border-radius: 6px;
+  padding: 4px;
+  gap: 4px;
 }
+
 .quick-filters button {
   padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
-  background-color: #f8f9fa;
+  border: none; /* Quitamos el borde por defecto */
+  background-color: rgb(255, 255, 255); /* Fondo transparente por defecto */
   border-radius: 4px;
   cursor: pointer;
+  font-weight: 500;
+  color: #272c31;
+  transition: all 0.2s ease-in-out;
+}
+
+.quick-filters button:hover:not(.active) {
+  background-color: #abc6e6; /* Un hover sutil para los no activos */
+}
+
+/* ESTILO DEL BOTÓN ACTIVO */
+.quick-filters button.active {
+  background-color: rgb(144, 162, 201);
+  color: var(--azul-robra);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-weight: 700;
 }
 .quick-filters button:hover {
   background-color: #e2e6ea;
@@ -78,13 +106,11 @@
   align-items: center;
   gap: 1rem;
 }
-.datepicker-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.datepicker-group label {
+.datepicker-group label,
+.comparison-toggle label {
   font-weight: 500;
+  color: #333; /* El texto dentro de la tarjeta debe ser oscuro */
+  margin-right: 0.5rem;
 }
 .react-datepicker-wrapper input {
   padding: 0.6rem 1rem;
@@ -93,18 +119,12 @@
   width: 120px;
 }
 
-.comparison-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 .btn-consultar {
   background-color: #198754;
   color: var(--blanco);
   border: none;
   padding: 0.7rem 1.5rem;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
@@ -114,25 +134,20 @@
   cursor: not-allowed;
 }
 
+/* --- SECCIONES DE TARJETAS Y GRÁFICOS --- */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
-.reports-grid {
-  display: grid;
-  /* Hacemos una grilla de 3 columnas para nuestras 3 listas */
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
+
 .stat-card {
   background-color: var(--blanco);
   padding: 1.5rem;
-  border-radius: 8px;
+  border-radius: 12px;
   text-align: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: none;
 }
 .stat-card h4 {
   color: var(--gris-texto);
@@ -154,26 +169,75 @@
   color: #dc3545;
 }
 
-.charts-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-
+/* Contenedor de gráficos y reportes */
+.full-width-chart-container,
+.report-item-full,
 .details-container {
-  margin-top: 2rem;
   background-color: var(--blanco);
   padding: 1.5rem;
-  border-radius: 8px;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: none;
 }
-.details-container h3 {
+
+.reports-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.report-item-full {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  align-items: center;
+}
+
+.report-chart {
+  max-height: 350px;
+  color: #333; /* Aseguramos que el texto del gráfico sea oscuro */
+}
+
+.full-width-chart-container {
+  height: 400px;
+}
+
+.stats-list-widget h3 {
+  color: #333;
+}
+
+/* --- TABLA DE DETALLES --- */
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
+}
+
+.details-header h3 {
+  margin: 0;
   color: var(--azul-robra);
 }
+
+.btn-export {
+  background-color: #1d6f42;
+  color: var(--blanco);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-export:hover {
+  background-color: #144d2e;
+}
+
 .table-wrapper {
   max-height: 400px;
   overflow-y: auto;
+  color: #333; /* Color de texto para la tabla */
 }
 table {
   width: 100%;
@@ -184,79 +248,25 @@ td {
   padding: 0.75rem;
   text-align: left;
   border-bottom: 1px solid #eee;
+  color: var(--azul-robra);
+  background-color: rgb(220, 221, 243);
 }
 th {
-  background-color: #f8f9fa;
+  background-color: #1f7fe0;
   font-weight: 600;
 }
 tbody tr:hover {
   background-color: #f1f1f1;
 }
-
-.reports-grid {
-  /* Hacemos que la grilla principal sea de una sola columna */
-  grid-template-columns: 1fr;
+.report-item-full h3 {
+  color: var(--azul-robra);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 1.2rem;
 }
 
-.report-item-full {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Dos columnas de igual tamaño */
-  gap: 2rem;
-  background-color: var(--blanco);
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  align-items: center;
-}
-
-.report-chart {
-  /* El gráfico ocupará el espacio asignado */
-  max-height: 350px; /* Limitamos la altura para que no sea gigante */
-}
-
-/* Quitamos el fondo y la sombra de la lista individual, ya que ahora está en el contenedor */
-.stats-list-widget {
-  box-shadow: none;
-  padding: 0;
-}
-/* ESTILOS PARA LA SECCIÓN DE DETALLES */
-
-.details-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.details-header h3 {
-  margin: 0; /* Quitamos el margen que tenía antes */
-}
-
-.btn-export {
-  background-color: #1d6f42; /* Un verde oscuro, color de Excel */
-  color: var(--blanco);
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 4px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.btn-export:hover {
-  background-color: #144d2e;
-}
-.stats-grid.six-columns {
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-}
-
-/* Contenedor para el nuevo gráfico de ancho completo */
-.full-width-chart-container {
-  grid-column: 1 / -1;
-  background-color: var(--blanco);
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  margin-bottom: 2rem;
-  height: 400px; /* <-- AÑADE ESTA LÍNEA */
+.stats-list-widget h3 {
+  color: var(--azul-robra);
+  text-align: left;
+  font-size: 1.2rem;
 }

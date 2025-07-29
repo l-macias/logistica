@@ -1,20 +1,24 @@
 .dashboard-layout {
-  background-color: #f8f9fa;
+  background-color: var(--azul-robra); /* Fondo azul oscuro */
+  color: var(
+    --blanco
+  ); /* Hacemos que el color de texto por defecto sea blanco */
   min-height: 100vh;
 }
 
 .dashboard-header {
-  background-color: var(--azul-robra);
+  background-color: transparent; /* El header ya no necesita su propio fondo */
   color: var(--blanco);
   padding: 1rem 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: none; /* Quitamos la sombra que ya no es necesaria */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Línea sutil de separación */
 }
 
 .header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1400px; /* Aumentamos el ancho máximo */
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -86,7 +90,9 @@
 .sidebar-stats h4 {
   text-align: center;
   margin-bottom: 1.5rem;
-  color: var(--gris-texto);
+  color: var(
+    --blanco
+  ); /* Título en blanco para que se lea sobre el fondo azul */
   font-size: 1.2rem;
 }
 
@@ -109,6 +115,8 @@
   text-align: center;
   border: 3px solid transparent;
   transition: all 0.3s ease;
+  width: 100%; /* <-- AÑADIR ESTA LÍNEA */
+  box-sizing: border-box; /* <-- AÑADIR ESTA LÍNEA (Buena práctica) */
 }
 
 .stats-card-main.green {
@@ -120,7 +128,11 @@
   background-color: #f8d7da;
   border-color: #dc3545;
 }
-
+.stats-card-main.yellow {
+  background-color: #fff3cd; /* Fondo amarillo pálido */
+  border-color: #ffc107; /* Borde ámbar */
+  color: #856404; /* Color de texto oscuro para legibilidad */
+}
 .stats-card-main h3 {
   font-size: 1rem;
   margin-bottom: 0.25rem;
@@ -137,6 +149,8 @@
   border-radius: 8px;
   padding: 0.75rem;
   text-align: center;
+  width: 100%; /* <-- AÑADIR ESTA LÍNEA */
+  box-sizing: border-box; /* <-- AÑADIR ESTA LÍNEA (Buena práctica) */
 }
 
 .stats-card-other h3 {

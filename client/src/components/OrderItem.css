@@ -1,110 +1,138 @@
+/* Estilo de tarjeta principal con un borde izquierdo de acento */
 .order-item {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  border: 1px solid #dee2e6; /* Borde más visible que el anterior */
+  border-left: 5px solid var(--azul-robra);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--blanco);
-  padding: 1rem 1.5rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
 .order-item:hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
 }
 
+/* Contenedor de la información del pedido */
 .order-info {
   display: flex;
-  gap: 2rem;
+  flex-grow: 1; /* Permite que ocupe el espacio disponible */
+  gap: 2.5rem; /* Más separación entre datos */
   align-items: center;
 }
 
-.order-info span {
-  font-size: 1rem;
+/* Cada bloque de info (ej: Nro + 12345) */
+.info-item {
+  display: flex;
+  flex-direction: column;
 }
 
+/* Etiqueta (Nro de Pedido, Transporte...) */
+.info-label {
+  font-size: 0.8rem;
+  color: #6c757d; /* Gris sutil */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+/* El dato principal */
+.info-data {
+  font-size: 1.1rem;
+  color: #212529; /* Negro suave */
+  font-weight: 500;
+}
+
+/* Contenedor de los botones */
 .actions {
   display: flex;
-  gap: 0.5rem;
+  flex-direction: column;
 }
 
 .actions button {
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border: 1px solid transparent; /* Borde base transparente */
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+}
+.actions-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+  text-align: center; /* Centramos el texto del título */
 }
 
+/* Botón Editar - Estilo "fantasma" o secundario */
 .btn-edit {
-  background-color: #e0e0e0;
-  color: var(--negro-robra);
+  background-color: #6c757d; /* Un gris estándar y sólido */
+  color: #ffffff; /* Texto blanco para contraste */
+  border-color: #6c757d;
 }
 .btn-edit:hover {
-  background-color: #d1d1d1;
+  background-color: #5a6268; /* Un gris un poco más oscuro al pasar el mouse */
+  border-color: #545b62;
 }
 
+/* Botón Eliminar - Estilo de "peligro" más refinado */
 .btn-delete {
-  background-color: #f44336;
-  color: var(--blanco);
+  background-color: #dc3545; /* Rojo de "peligro" más intenso */
+  color: #ffffff;
+  border-color: #dc3545;
 }
 .btn-delete:hover {
-  background-color: #d32f2f;
+  background-color: #c82333; /* Rojo más oscuro al pasar el mouse */
+  border-color: #bd2130;
 }
 
-/* Estilos para el modo edición */
+/* --- Estilos para el modo edición --- */
 .order-item.editing {
   flex-direction: column;
   align-items: stretch;
+  gap: 1rem;
 }
 
 .edit-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
   font-size: 1rem;
-  margin-bottom: 0.5rem;
+  box-sizing: border-box;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: var(--azul-robra);
+  box-shadow: 0 0 0 3px rgba(10, 45, 77, 0.15);
 }
 
 .btn-save {
-  background-color: #4caf50;
-  color: var(--blanco);
+  background-color: #2f9e44;
+  color: white;
 }
 .btn-save:hover {
-  background-color: #388e3c;
+  background-color: #2b8a3e;
 }
 
 .btn-cancel {
-  background-color: #757575;
-  color: var(--blanco);
+  background-color: #868e96;
+  color: white;
 }
 .btn-cancel:hover {
-  background-color: #616161;
+  background-color: #5c6268;
 }
-.form-group-checkbox {
+.info-item:last-child {
+  margin-left: auto;
+  margin-right: 3rem; /* Espacio añadido para separar de los botones */
+}
+.buttons-container {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.form-group-checkbox label {
-  margin-bottom: 0;
-  font-weight: 400;
-  color: #555;
-}
-
-.warning-message {
-  color: #e67e22; /* Un color naranja para advertencia */
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-}
-
-/* Estilo para el botón deshabilitado */
-.btn-submit:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+  gap: 0.75rem;
 }

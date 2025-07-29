@@ -30,10 +30,20 @@ const DashboardPage = () => {
 
   let myCardClass = 'stats-card-main';
   if (myStats) {
-    if (myStats.count >= topScore && topScore > 0) {
-      myCardClass += ' green';
-    } else if (myStats.count < topScore) {
+    // NUEVA LÓGICA CORREGIDA
+    const winnersCount = summary.filter(
+      (item) => item.count === topScore
+    ).length;
+
+    if (myStats.count < topScore) {
+      // ROJO: Si tu puntaje es menor que el máximo.
       myCardClass += ' red';
+    } else if (topScore > 0 && winnersCount === 1) {
+      // VERDE: Si tu puntaje es el máximo, no es cero, y eres el único ganador.
+      myCardClass += ' green';
+    } else {
+      // AMARILLO: Para todos los demás casos (empate en el máximo, o todos en cero).
+      myCardClass += ' yellow';
     }
   }
 

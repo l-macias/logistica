@@ -1,34 +1,51 @@
+/* Usamos un color de fondo más neutro y moderno */
 .page-container {
-  max-width: 900px;
+  max-width: 950px;
   margin: 0 auto;
   padding: 2rem;
+
+  background-color: var(--azul-robra);
+  min-height: 100vh;
 }
 
+/* Cabecera más limpia, sin bordes */
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  border-bottom: 2px solid #eee;
+  margin-bottom: 2.5rem; /* Más espacio inferior */
   padding-bottom: 1rem;
 }
 
+/* Título con el color principal de la marca */
 .page-header h1 {
-  color: var(--azul-robra);
+  color: white;
+  font-size: 2.25rem; /* Más grande y con más peso */
+  font-weight: 700;
 }
 
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Un poco menos de espacio entre tarjetas */
+}
+
+/* Botón de volver con un hover más notorio */
 .btn-back {
   background-color: var(--azul-robra);
   color: var(--blanco);
   text-decoration: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 4px;
+  padding: 0.8rem 1.5rem; /* Un poco más grande */
+  border-radius: 6px;
   font-weight: 500;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-back:hover {
   background-color: #08243e;
+  transform: translateY(-2px); /* Efecto de "levantarse" */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .no-orders-message {
@@ -37,5 +54,11 @@
   font-size: 1.2rem;
   padding: 3rem;
   background-color: var(--blanco);
+  border: 1px dashed #ccc; /* Estilo de "vacío" */
   border-radius: 8px;
+}
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Aumentado de 1rem a 1.5rem para mayor separación */
 }

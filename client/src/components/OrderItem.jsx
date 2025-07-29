@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import apiClient from '../services/api';
-import './OrderItem.css';
+import './OrderItem.css'; // 👇 ¡Esta es la línea que faltaba!
 
 const OrderItem = ({ order, onOrderDeleted, onOrderUpdated }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -16,7 +16,7 @@ const OrderItem = ({ order, onOrderDeleted, onOrderUpdated }) => {
     ) {
       try {
         await apiClient.delete(`/orders/${order._id}`);
-        onOrderDeleted(order._id); // Notifica al componente padre para que lo quite de la lista
+        onOrderDeleted(order._id);
       } catch (error) {
         console.error('Error al eliminar el pedido:', error);
         alert('No se pudo eliminar el pedido.');
@@ -32,8 +32,8 @@ const OrderItem = ({ order, onOrderDeleted, onOrderUpdated }) => {
         transport: editedData.transport,
         packer: editedData.packer,
       });
-      onOrderUpdated(response.data); // Notifica al padre para que actualice la lista
-      setIsEditing(false); // Salimos del modo edición
+      onOrderUpdated(response.data);
+      setIsEditing(false);
     } catch (error) {
       console.error('Error al actualizar el pedido:', error);
       alert('No se pudo actualizar el pedido.');
@@ -92,24 +92,31 @@ const OrderItem = ({ order, onOrderDeleted, onOrderUpdated }) => {
 
   return (
     <div className="order-item">
+      {/* 👇 INICIO DE LA SECCIÓN MODIFICADA 👇 */}
       <div className="order-info">
-        <span>
-          <strong>Nro:</strong> {order.orderNumber}
-        </span>
-        <span>
-          <strong>Transporte:</strong> {order.transport}
-        </span>
-        <span>
-          <strong>Armador:</strong> {order.packer}
-        </span>
+        <div className="info-item">
+          <span className="info-label">Nro de Pedido</span>
+          <span className="info-data">{order.orderNumber}</span>
+        </div>
+        <div className="info-item">
+          <span className="info-label">Transporte</span>
+          <span className="info-data">{order.transport}</span>
+        </div>
+        <div className="info-item">
+          <span className="info-label">Armador</span>
+          <span className="info-data">{order.packer}</span>
+        </div>
       </div>
       <div className="actions">
-        <button onClick={() => setIsEditing(true)} className="btn-edit">
-          Editar
-        </button>
-        <button onClick={handleDelete} className="btn-delete">
-          Eliminar
-        </button>
+        <span className="actions-label">Acciones</span>
+        <div className="buttons-container">
+          <button onClick={() => setIsEditing(true)} className="btn-edit">
+            Editar
+          </button>
+          <button onClick={handleDelete} className="btn-delete">
+            Eliminar
+          </button>
+        </div>
       </div>
     </div>
   );

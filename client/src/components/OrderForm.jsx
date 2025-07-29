@@ -20,7 +20,13 @@ const OrderForm = ({ onOrderCreated }) => {
   const [orderNumberError, setOrderNumberError] = useState('');
   const armadores = ['Alexis', 'Matias', 'Nacho', 'Gaston'];
   const orderNumberInputRef = useRef(null);
-
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      color: '#212529', // Forzamos el color de texto a oscuro
+      backgroundColor: state.isFocused ? '#e9ecef' : 'white', // Fondo gris claro al pasar el mouse
+    }),
+  };
   useEffect(() => {
     if (isDefaultDetail) {
       const defaultOption =
@@ -198,6 +204,7 @@ const OrderForm = ({ onOrderCreated }) => {
             placeholder="Escribe o selecciona..."
             formatCreateLabel={(inputValue) => `Añadir "${inputValue}"`}
             isDisabled={isDefaultDetail}
+            styles={customStyles}
           />
         </div>
 

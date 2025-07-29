@@ -31,6 +31,7 @@ const BarChart = ({ chartData, title }) => {
       title: {
         display: true,
         text: title,
+        color: '#0A2D4D',
         font: { size: 16 },
       },
     },

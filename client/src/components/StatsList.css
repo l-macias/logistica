@@ -24,6 +24,7 @@
 
 .item-name {
   font-weight: 500;
+  color: var(--azul-robra);
 }
 .item-details {
   display: flex;

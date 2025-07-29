@@ -35,7 +35,7 @@ const AdminDashboardPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [activeFilter, setActiveFilter] = useState('this_month');
   const fetchStats = useCallback(async () => {
     setLoading(true);
     const payload = {
@@ -74,6 +74,7 @@ const AdminDashboardPage = () => {
   }, [fetchStats]);
 
   const setDateRange = (period) => {
+    setActiveFilter(period);
     const today = new Date();
     if (period === 'today') {
       setPrimaryStartDate(today);
@@ -260,12 +261,28 @@ const AdminDashboardPage = () => {
         <div className="controls-container">
           <div className="date-controls">
             <div className="quick-filters">
-              <button onClick={() => setDateRange('today')}>Hoy</button>
-              <button onClick={() => setDateRange('yesterday')}>Ayer</button>
-              <button onClick={() => setDateRange('this_month')}>
+              <button
+                onClick={() => setDateRange('today')}
+                className={activeFilter === 'today' ? 'active' : ''}
+              >
+                Hoy
+              </button>
+              <button
+                onClick={() => setDateRange('yesterday')}
+                className={activeFilter === 'yesterday' ? 'active' : ''}
+              >
+                Ayer
+              </button>
+              <button
+                onClick={() => setDateRange('this_month')}
+                className={activeFilter === 'this_month' ? 'active' : ''}
+              >
                 Este Mes
               </button>
-              <button onClick={() => setDateRange('last_month')}>
+              <button
+                onClick={() => setDateRange('last_month')}
+                className={activeFilter === 'last_month' ? 'active' : ''}
+              >
                 Mes Pasado
               </button>
             </div>

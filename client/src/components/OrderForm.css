@@ -1,100 +1,192 @@
+/* --- ESTILO GENERAL DEL CONTENEDOR DEL FORMULARIO --- */
 .form-container {
   background-color: var(--blanco);
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border-radius: 12px; /* Un poco más redondeado */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
   max-width: 600px;
-  margin: 2rem auto;
+  margin: 1.25rem auto;
+  margin-top: -1rem;
 }
 
 .form-container h2 {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
+  margin-top: -1.5rem;
   color: var(--azul-robra);
+  font-weight: 700;
+  font-size: 1.8rem;
 }
 
-/* Reutilizamos los estilos de LoginPage.css */
+/* --- GRUPOS DE FORMULARIO Y ETIQUETAS --- */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   text-align: left;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
-  color: var(--negro-robra);
-  font-weight: 500;
+  margin-bottom: 0.6rem;
+  color: #495057; /* Un gris oscuro para las etiquetas */
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
+/* --- ESTILO MODERNO PARA INPUTS Y SELECTS --- */
 .form-group input,
-.form-group select {
+.form-group select,
+.CreatableSelect__control {
+  /* Estilo para el campo de Transporte */
   width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.85rem 1rem;
+  border: 1px solid #ced4da; /* Borde más sutil */
+  border-radius: 6px;
   font-size: 1rem;
-  background-color: var(--gris-claro);
+  background-color: #f8f9fa; /* Fondo muy claro para el input */
+  transition: all 0.2s ease-in-out;
 }
 
 .form-group input:focus,
-.form-group select:focus {
+.form-group select:focus,
+.CreatableSelect__control--is-focused {
   outline: none;
   border-color: var(--azul-robra);
-  box-shadow: 0 0 0 2px rgba(10, 45, 77, 0.2);
+  background-color: var(--blanco);
+  box-shadow: 0 0 0 3px rgba(10, 45, 77, 0.15); /* Sombra de foco más suave */
+}
+.form-container .CreatableSelect__option {
+  color: #212529 !important;
+}
+/* Placeholder para el Select Creatable */
+.CreatableSelect__placeholder {
+  color: #6c757d;
 }
 
+/* --- ESTILO MODERNO PARA CHECKBOXES (LA MAGIA ESTÁ AQUÍ) --- */
+.form-group-checkbox {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  user-select: none; /* Evita que el texto de la etiqueta se seleccione */
+}
+
+/* Ocultamos el checkbox por defecto */
+.form-group-checkbox input[type='checkbox'] {
+  opacity: 0;
+  position: absolute;
+  cursor: pointer;
+}
+
+/* Creamos la caja del checkbox personalizado */
+.form-group-checkbox label::before {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+  margin-right: 0.75rem;
+  border: 2px solid #adb5bd;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  transition: all 0.2s ease;
+}
+
+/* Creamos la marca de verificación (check) */
+.form-group-checkbox input[type='checkbox']:checked + label::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  width: 6px;
+  height: 12px;
+  border: solid var(--azul-robra); /* <-- La tilde ahora será azul */
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+/* Cambiamos el color de la caja cuando está seleccionada */
+.form-group-checkbox input[type='checkbox']:checked + label::before {
+  border-color: var(
+    --azul-robra
+  ); /* Mantenemos el borde azul para que se note que está activo */
+}
+
+/* Estilo para las etiquetas de los checkboxes */
+.form-group-checkbox label {
+  color: #212529;
+  font-weight: 500;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* --- DISPOSICIÓN DE CAMPOS EN LÍNEA --- */
+.form-group-inline {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  align-items: center; /* <-- ASEGÚRATE DE QUE ESTA LÍNEA ESTÉ ASÍ */
+}
+
+.transport-group {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* --- BOTÓN DE ENVÍO --- */
 .btn-submit {
   width: 100%;
-  padding: 0.8rem;
+  padding: 0.9rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   background-color: var(--azul-robra);
   color: var(--blanco);
   font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   margin-top: 1rem;
 }
 
-.btn-submit:hover {
+.btn-submit:hover:not(:disabled) {
   background-color: #08243e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(10, 45, 77, 0.2);
+}
+
+/* Estilo para cuando el botón está deshabilitado */
+.btn-submit:disabled {
+  background-color: #a5a9ad;
+  cursor: not-allowed;
+}
+
+/* --- MENSAJES DE ESTADO --- */
+.success-message,
+.error-message,
+.warning-message,
+.validation-error {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-weight: 500;
+  padding: 0.8rem;
+  border-radius: 6px;
 }
 
 .success-message {
-  color: #2e7d32;
-  text-align: center;
-  margin-top: 1rem;
-  font-weight: 500;
+  background-color: #d4edda;
+  color: #155724;
 }
 
 .error-message {
-  color: #d93025;
-  text-align: center;
-  margin-top: 1rem;
-  font-weight: 500;
-}
-.form-group-inline {
-  display: grid;
-  grid-template-columns: 1fr 2fr; /* Divide el espacio para los campos en línea */
-  gap: 1rem;
-  align-items: flex-end;
+  background-color: #f8d7da;
+  color: #721c24;
 }
 
-.pallet-checkbox {
-  height: 100%;
-  padding-bottom: 0.8rem; /* Alinear con el input de al lado */
-}
-.form-group-inline.transport-group {
-  grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
-  align-items: center; /* Centramos verticalmente */
-}
-
-.transport-default-checkbox {
-  padding-top: 1.5rem; /* Alineamos el checkbox con el label del otro campo */
-}
+.warning-message,
 .validation-error {
-  color: #dc3545; /* Rojo para errores de validación */
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
+  background-color: #fff3cd;
+  color: #856404;
+}
+.form-group-inline .form-group-checkbox {
+  position: relative;
+  top: 2px;
 }
