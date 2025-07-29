@@ -134,6 +134,7 @@ const checkOrderExists = async (req, res) => {
       res.json({
         exists: true,
         message: 'Este número de pedido ya fue cargado.',
+        orderId: order._id, // <-- AÑADIMOS LA ID
       });
     } else {
       res.json({ exists: false });
@@ -188,12 +189,10 @@ const searchOrdersByPrefix = async (req, res) => {
   const { prefix } = req.query;
 
   if (!prefix || prefix.length < 4 || isNaN(prefix)) {
-    return res
-      .status(400)
-      .json({
-        message:
-          'El prefijo de búsqueda debe ser un número de al menos 4 dígitos.',
-      });
+    return res.status(400).json({
+      message:
+        'El prefijo de búsqueda debe ser un número de al menos 4 dígitos.',
+    });
   }
 
   try {

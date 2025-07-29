@@ -1,64 +1,48 @@
-/* Estilo de tarjeta principal con un borde izquierdo de acento */
+/* --- VISTA NORMAL DEL ITEM --- */
 .order-item {
   background-color: #ffffff;
   border-radius: 8px;
   padding: 1.5rem 2rem;
-  border: 1px solid #dee2e6; /* Borde más visible que el anterior */
+  border: 1px solid #dee2e6;
   border-left: 5px solid var(--azul-robra);
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
-
 .order-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
 }
-
-/* Contenedor de la información del pedido */
 .order-info {
   display: flex;
-  flex-grow: 1; /* Permite que ocupe el espacio disponible */
-  gap: 2.5rem; /* Más separación entre datos */
+  flex-grow: 1;
+  gap: 2.5rem;
   align-items: center;
 }
-
-/* Cada bloque de info (ej: Nro + 12345) */
 .info-item {
   display: flex;
   flex-direction: column;
 }
-
-/* Etiqueta (Nro de Pedido, Transporte...) */
 .info-label {
   font-size: 0.8rem;
-  color: #6c757d; /* Gris sutil */
+  color: #6c757d;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 0.25rem;
 }
-
-/* El dato principal */
 .info-data {
   font-size: 1.1rem;
-  color: #212529; /* Negro suave */
+  color: #212529;
   font-weight: 500;
 }
-
-/* Contenedor de los botones */
+.info-item:last-child {
+  margin-left: auto;
+  margin-right: 3rem;
+}
 .actions {
   display: flex;
   flex-direction: column;
-}
-
-.actions button {
-  border: 1px solid transparent; /* Borde base transparente */
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s ease;
 }
 .actions-label {
   font-size: 0.8rem;
@@ -66,73 +50,115 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 0.5rem;
-  text-align: center; /* Centramos el texto del título */
+  text-align: center;
 }
-
-/* Botón Editar - Estilo "fantasma" o secundario */
+.buttons-container {
+  display: flex;
+  gap: 0.75rem;
+}
+.buttons-container button {
+  border: 1px solid transparent;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
 .btn-edit {
-  background-color: #6c757d; /* Un gris estándar y sólido */
-  color: #ffffff; /* Texto blanco para contraste */
+  background-color: #6c757d;
+  color: #ffffff;
   border-color: #6c757d;
 }
 .btn-edit:hover {
-  background-color: #5a6268; /* Un gris un poco más oscuro al pasar el mouse */
+  background-color: #5a6268;
   border-color: #545b62;
 }
-
-/* Botón Eliminar - Estilo de "peligro" más refinado */
 .btn-delete {
-  background-color: #dc3545; /* Rojo de "peligro" más intenso */
+  background-color: #dc3545;
   color: #ffffff;
   border-color: #dc3545;
 }
 .btn-delete:hover {
-  background-color: #c82333; /* Rojo más oscuro al pasar el mouse */
+  background-color: #c82333;
   border-color: #bd2130;
 }
 
-/* --- Estilos para el modo edición --- */
-.order-item.editing {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 1rem;
+/* --- VISTA DE EDICIÓN --- */
+.order-item-editing-container {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  color: #333;
+  border: 1px solid #dee2e6;
+  border-left: 5px solid #ffc107; /* Borde amarillo para indicar edición */
 }
 
-.edit-input {
+.editing-form h4 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 2rem;
+  color: var(--azul-robra);
+  font-weight: 700;
+}
+
+/* Reutilizamos los estilos del formulario principal */
+.editing-form .form-group,
+.editing-form .form-group-inline {
+  margin-bottom: 1.25rem;
+}
+.editing-form .form-group label {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: #495057;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.editing-form input,
+.editing-form select,
+.editing-form .CreatableSelect__control {
   width: 100%;
   padding: 0.75rem 1rem;
   border: 1px solid #ced4da;
   border-radius: 6px;
   font-size: 1rem;
-  box-sizing: border-box;
+  background-color: #f8f9fa;
 }
-
-.edit-input:focus {
-  outline: none;
-  border-color: var(--azul-robra);
-  box-shadow: 0 0 0 3px rgba(10, 45, 77, 0.15);
+.editing-form .form-group-inline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: center;
 }
-
-.btn-save {
-  background-color: #2f9e44;
-  color: white;
-}
-.btn-save:hover {
-  background-color: #2b8a3e;
-}
-
-.btn-cancel {
-  background-color: #868e96;
-  color: white;
-}
-.btn-cancel:hover {
-  background-color: #5c6268;
-}
-.info-item:last-child {
-  margin-left: auto;
-  margin-right: 3rem; /* Espacio añadido para separar de los botones */
-}
-.buttons-container {
+.editing-form .form-group-checkbox {
+  position: relative;
   display: flex;
-  gap: 0.75rem;
+  align-items: center;
+}
+
+.editing-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+.btn-save,
+.btn-cancel {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-save {
+  background-color: #198754;
+  color: white;
+}
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+}
+.validation-error {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
 }
