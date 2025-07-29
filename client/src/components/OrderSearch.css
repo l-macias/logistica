@@ -1,0 +1,94 @@
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  color: var(--blanco);
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  width: 200px;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.search-input:focus {
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: var(--blanco);
+}
+
+.search-error {
+  margin-left: 1rem;
+  color: #f8d7da;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+.search-loading {
+  margin-left: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.search-input:disabled {
+  cursor: not-allowed;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.search-input::-webkit-outer-spin-button,
+.search-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.search-input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield; /* Para Firefox */
+}
+/* --- ESTILOS PARA EL DESPLEGABLE DE SUGERENCIAS --- */
+.suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: var(--blanco);
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  margin-top: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.suggestion-item {
+  padding: 0.75rem 1rem;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.suggestion-item:not(.no-results):hover {
+  background-color: #f0f0f0;
+}
+
+.suggestion-item.no-results {
+  color: #888;
+  cursor: default;
+}
+
+.suggestion-packer {
+  font-size: 0.85rem;
+  color: #666;
+  background-color: #e9ecef;
+  padding: 2px 6px;
+  border-radius: 4px;
+}

@@ -168,6 +168,55 @@ const getTodaySummary = async (req, res) => {
   }
 };
 
+// --- NUEVA FUNCIÓN PARA BUSCAR UN PEDIDO POR NÚMERO ---
+const getOrderByNumber = async (req, res) => {
+  try {
+    const order = await Order.findOne({ orderNumber: req.params.orderNumber });
+
+    if (order) {
+      res.json(order);
+    } else {
+      // Si no se encuentra el pedido, devolvemos un 404
+      res.status(404).json({ message: 'Pedido no encontrado' });
+    }
+  } catch (error) {
+    console.error('Error al buscar el pedido por número:', error);
+    res.status(500).json({ message: 'Error del servidor' });
+  }
+};
+const searchOrdersByPrefix = async (req, res) => {
+  const { prefix } = req.query;
+
+  if (!prefix || prefix.length < 4 || isNaN(prefix)) {
+    return res
+      .status(400)
+      .json({
+        message:
+          'El prefijo de búsqueda debe ser un número de al menos 4 dígitos.',
+      });
+  }
+
+  try {
+    // Convertimos el prefijo a número para el cálculo
+    const prefixNum = parseInt(prefix, 10);
+
+    // Calculamos el rango numérico para la búsqueda.
+    // Ejemplo: si el prefijo es 1234, buscamos entre 123400 y 123499.
+    const remainingDigits = 6 - prefix.length;
+    const lowerBound = prefixNum * Math.pow(10, remainingDigits);
+    const upperBound = lowerBound + Math.pow(10, remainingDigits) - 1;
+
+    // Usamos el rango en la consulta, que es la forma correcta para campos numéricos
+    const orders = await Order.find({
+      orderNumber: { $gte: lowerBound, $lte: upperBound },
+    }).limit(10); // Limitamos a 10 resultados para no sobrecargar
+
+    res.json(orders);
+  } catch (error) {
+    console.error('Error en la búsqueda por prefijo:', error);
+    res.status(500).json({ message: 'Error del servidor' });
+  }
+};
 module.exports = {
   createOrder,
   getOrders,
@@ -176,4 +225,6 @@ module.exports = {
   deleteOrder,
   checkOrderExists,
   getTodaySummary,
+  getOrderByNumber,
+  searchOrdersByPrefix,
 };

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../services/api';
 import OrderForm from '../components/OrderForm';
+import OrderSearch from '../components/OrderSearch';
 import './DashboardPage.css';
 
 const DashboardPage = () => {
@@ -55,6 +56,7 @@ const DashboardPage = () => {
             Bienvenido, <strong>{user?.username}</strong>
           </span>
           <div className="header-actions">
+            <OrderSearch />
             {user && user.role === 'admin' && (
               <Link to="/admin" className="btn-admin">
                 Panel de Admin
