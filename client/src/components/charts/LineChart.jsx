@@ -1,10 +1,11 @@
 import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
@@ -13,17 +14,17 @@ import {
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend
 );
 
-const BarChart = ({ chartData, title }) => {
+const LineChart = ({ chartData, title }) => {
   const options = {
     responsive: true,
-    // 👇 AÑADIMOS ESTA LÍNEA
-    maintainAspectRatio: false, // <-- Esto es clave
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'top',
@@ -34,9 +35,14 @@ const BarChart = ({ chartData, title }) => {
         font: { size: 16 },
       },
     },
+    scales: {
+      y: {
+        beginAtZero: true, // Asegura que el eje Y empiece en 0
+      },
+    },
   };
 
-  return <Bar options={options} data={chartData} />;
+  return <Line options={options} data={chartData} />;
 };
 
-export default BarChart;
+export default LineChart;

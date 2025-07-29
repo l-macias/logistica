@@ -1,20 +1,37 @@
 const Order = require('../models/Order.js');
 
-// --- La función createOrder que ya teníamos ---
+// Función para obtener inicio del día en UTC para una fecha argentina
+const startOfDayArgentine = (date) => {
+  const localDate = new Date(date + 'T00:00:00.000');
+  return new Date(localDate.getTime() + 3 * 60 * 60 * 1000);
+};
+
+// Función para obtener fin del día en UTC para una fecha argentina
+const endOfDayArgentine = (date) => {
+  const localDate = new Date(date + 'T23:59:59.999');
+  return new Date(localDate.getTime() + 3 * 60 * 60 * 1000);
+};
+
+// --- Crear un nuevo pedido ---
 const createOrder = async (req, res) => {
   try {
-    const { orderNumber, transport, packer } = req.body;
+    const { orderNumber, transport, packer, packageCount, isPallet } = req.body;
+
     if (!orderNumber || !transport || !packer) {
       return res
         .status(400)
         .json({ message: 'Por favor, complete todos los campos' });
     }
+
     const order = new Order({
       orderNumber,
       transport,
       packer,
       closer: req.user.username,
+      packageCount: Number(packageCount),
+      isPallet,
     });
+
     const createdOrder = await order.save();
     res.status(201).json(createdOrder);
   } catch (error) {
@@ -23,7 +40,7 @@ const createOrder = async (req, res) => {
   }
 };
 
-// --- La función getOrders que ya teníamos (la dejamos para el admin) ---
+// --- Obtener todos los pedidos (para el futuro panel de admin) ---
 const getOrders = async (req, res) => {
   try {
     const orders = await Order.find({}).sort({ timestamp: -1 });
@@ -36,25 +53,20 @@ const getOrders = async (req, res) => {
   }
 };
 
-// --- NUEVA FUNCIÓN ---
-// @desc    Obtener los pedidos del día del usuario logueado
-// @route   GET /api/orders/today
-// @access  Private
+// --- Obtener los pedidos del día del usuario logueado ---
 const getTodayUserOrders = async (req, res) => {
   try {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Establece la hora al inicio del día
-
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1); // Establece la hora al inicio del día siguiente
+    const from = startOfDayArgentine(today.toISOString().split('T')[0]);
+    const to = endOfDayArgentine(today.toISOString().split('T')[0]);
 
     const orders = await Order.find({
-      closer: req.user.username, // Solo los del usuario logueado
+      closer: req.user.username,
       timestamp: {
-        $gte: today, // Mayor o igual que el inicio de hoy
-        $lt: tomorrow, // Menor que el inicio de mañana
+        $gte: from,
+        $lt: to,
       },
-    }).sort({ timestamp: -1 }); // Los más nuevos primero
+    }).sort({ timestamp: -1 });
 
     res.json(orders);
   } catch (error) {
@@ -63,10 +75,7 @@ const getTodayUserOrders = async (req, res) => {
   }
 };
 
-// --- NUEVA FUNCIÓN ---
-// @desc    Actualizar un pedido
-// @route   PUT /api/orders/:id
-// @access  Private
+// --- Actualizar un pedido ---
 const updateOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
@@ -75,7 +84,6 @@ const updateOrder = async (req, res) => {
       return res.status(404).json({ message: 'Pedido no encontrado' });
     }
 
-    // Verificación de seguridad: solo el usuario que lo creó puede editarlo
     if (order.closer !== req.user.username) {
       return res
         .status(401)
@@ -95,10 +103,7 @@ const updateOrder = async (req, res) => {
   }
 };
 
-// --- NUEVA FUNCIÓN ---
-// @desc    Eliminar un pedido
-// @route   DELETE /api/orders/:id
-// @access  Private
+// --- Eliminar un pedido ---
 const deleteOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
@@ -107,25 +112,25 @@ const deleteOrder = async (req, res) => {
       return res.status(404).json({ message: 'Pedido no encontrado' });
     }
 
-    // Verificación de seguridad: solo el usuario que lo creó puede eliminarlo
     if (order.closer !== req.user.username) {
       return res
         .status(401)
         .json({ message: 'No autorizado para eliminar este pedido' });
     }
 
-    await order.deleteOne(); // Usamos deleteOne() en Mongoose v6+
+    await order.deleteOne();
     res.json({ message: 'Pedido eliminado exitosamente' });
   } catch (error) {
     console.error('Error al eliminar el pedido:', error);
     res.status(500).json({ message: 'Error del servidor' });
   }
 };
+
+// --- Verificar si un número de pedido ya existe ---
 const checkOrderExists = async (req, res) => {
   try {
     const order = await Order.findOne({ orderNumber: req.params.orderNumber });
     if (order) {
-      // Si se encuentra un pedido, devolvemos 'exists: true'
       res.json({
         exists: true,
         message: 'Este número de pedido ya fue cargado.',
@@ -137,7 +142,32 @@ const checkOrderExists = async (req, res) => {
     res.status(500).json({ message: 'Error del servidor' });
   }
 };
-// Exportamos todas las funciones
+
+// --- NUEVA FUNCIÓN PARA EL DASHBOARD EN TIEMPO REAL ---
+const getTodaySummary = async (req, res) => {
+  try {
+    const today = new Date();
+    const from = startOfDayArgentine(today.toISOString().split('T')[0]);
+    const to = endOfDayArgentine(today.toISOString().split('T')[0]);
+
+    const summary = await Order.aggregate([
+      { $match: { timestamp: { $gte: from, $lte: to } } },
+      {
+        $group: {
+          _id: '$closer',
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { count: -1 } },
+    ]);
+
+    res.json(summary);
+  } catch (error) {
+    console.error('Error al obtener el resumen del día:', error);
+    res.status(500).json({ message: 'Error del servidor' });
+  }
+};
+
 module.exports = {
   createOrder,
   getOrders,
@@ -145,4 +175,5 @@ module.exports = {
   updateOrder,
   deleteOrder,
   checkOrderExists,
+  getTodaySummary,
 };

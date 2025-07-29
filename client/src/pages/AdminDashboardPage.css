@@ -246,3 +246,17 @@ tbody tr:hover {
 .btn-export:hover {
   background-color: #144d2e;
 }
+.stats-grid.six-columns {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+/* Contenedor para el nuevo gráfico de ancho completo */
+.full-width-chart-container {
+  grid-column: 1 / -1;
+  background-color: var(--blanco);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  height: 400px; /* <-- AÑADE ESTA LÍNEA */
+}

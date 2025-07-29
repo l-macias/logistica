@@ -7,7 +7,9 @@ const {
   updateOrder,
   deleteOrder,
   checkOrderExists,
+  getTodaySummary,
 } = require('../controllers/orderController.js');
+
 const { protect } = require('../middleware/authMiddleware.js');
 
 // Ruta para crear un pedido y obtener todos los pedidos (para admin)
@@ -21,5 +23,8 @@ router.route('/:id').put(protect, updateOrder).delete(protect, deleteOrder);
 
 // Ruta para verificar si un pedido existe por su número de orden
 router.route('/check/:orderNumber').get(protect, checkOrderExists);
+
+// Ruta para el resumen en tiempo real del dashboard de usuario
+router.route('/summary/today').get(protect, getTodaySummary);
 
 module.exports = router;

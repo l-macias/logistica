@@ -1,111 +1,139 @@
 import React, { useState, useRef, useEffect } from 'react';
 import apiClient from '../services/api';
+import CreatableSelect from 'react-select/creatable';
+import transportOptions from '../data/transportes.json';
 import './OrderForm.css';
 
 const OrderForm = ({ onOrderCreated }) => {
-  // Estados del formulario
   const [orderNumber, setOrderNumber] = useState('');
-  const [transport, setTransport] = useState('');
   const [packer, setPacker] = useState('Alexis');
+  const [deliveryType, setDeliveryType] = useState('Retira');
+  const [deliveryDetail, setDeliveryDetail] = useState(null);
+  const [packageCount, setPackageCount] = useState(1);
+  const [isPallet, setIsPallet] = useState(false);
 
-  // Estados para las nuevas funcionalidades
   const [rememberPacker, setRememberPacker] = useState(false);
+  const [isDefaultDetail, setIsDefaultDetail] = useState(true);
   const [duplicateError, setDuplicateError] = useState('');
-
-  // Estados para mensajes de feedback
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-
+  const [orderNumberError, setOrderNumberError] = useState('');
   const armadores = ['Alexis', 'Matias', 'Nacho', 'Gaston'];
-  const transportInputRef = useRef(null); // Ref para manejar el "Enter"
+  const orderNumberInputRef = useRef(null);
 
-  // 1) Lógica para recordar el armador
   useEffect(() => {
-    if (rememberPacker) {
-      // Si se marca el check, guardamos el armador actual en localStorage
-      localStorage.setItem('rememberedPacker', packer);
+    if (isDefaultDetail) {
+      const defaultOption =
+        deliveryType === 'Retira'
+          ? { value: 'Cliente Retira', label: 'Cliente Retira' }
+          : { value: 'Reparto Propio', label: 'Reparto Propio' };
+      setDeliveryDetail(defaultOption);
+    } else {
+      setDeliveryDetail(null);
     }
+  }, [isDefaultDetail, deliveryType]);
+
+  useEffect(() => {
+    if (rememberPacker) localStorage.setItem('rememberedPacker', packer);
   }, [packer, rememberPacker]);
 
   useEffect(() => {
-    // Al cargar el componente, vemos si hay un armador guardado
     const savedPacker = localStorage.getItem('rememberedPacker');
     if (savedPacker) {
       setPacker(savedPacker);
-      setRememberPacker(true); // Marcamos el check si había algo guardado
+      setRememberPacker(true);
     }
+    orderNumberInputRef.current?.focus();
   }, []);
 
-  // 3) Lógica para verificar número de pedido duplicado
   const handleOrderNumberBlur = async () => {
-    if (!orderNumber) {
-      setDuplicateError('');
-      return;
-    }
+    if (!orderNumber) return setDuplicateError('');
+    if (orderNumber.length !== 6) return; // No buscamos duplicados si el número es inválido
+
     try {
       const { data } = await apiClient.get(`/orders/check/${orderNumber}`);
-      if (data.exists) {
-        setDuplicateError(data.message);
-      } else {
-        setDuplicateError('');
-      }
+      setDuplicateError(data.exists ? data.message : '');
     } catch (err) {
       console.error('Error al verificar el pedido:', err);
-      setDuplicateError(''); // No bloqueamos al usuario si la API falla
     }
   };
 
-  // 2) Función para normalizar el texto del transporte
-  const normalizeTransport = (text) => {
-    if (!text) return '';
-    const trimmedText = text.trim(); // Quita espacios al inicio y final
-    return (
-      trimmedText.charAt(0).toUpperCase() + trimmedText.slice(1).toLowerCase()
-    );
+  const normalizeTransportString = (type, detail) => {
+    if (!detail || !detail.value) return type;
+    const trimmedDetail = detail.value.trim();
+    return `${type}: ${
+      trimmedDetail.charAt(0).toUpperCase() + trimmedDetail.slice(1)
+    }`;
   };
 
+  const handleOrderNumberChange = (e) => {
+    const value = e.target.value;
+    setOrderNumber(value);
+
+    if (value && value.length !== 6) {
+      setOrderNumberError('El número de pedido debe tener 6 dígitos.');
+    } else {
+      setOrderNumberError(''); // Limpiamos el error si es correcto
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (orderNumber.length !== 6) {
+      setOrderNumberError('El número de pedido debe tener 6 dígitos.');
+      return; // Detenemos el envío
+    }
     if (duplicateError) {
+      console.log('❌ DETENIDO: Hay un error de pedido duplicado.');
       setError('No se puede guardar, el número de pedido ya existe.');
+      setTimeout(() => setError(''), 4000);
       return;
     }
 
+    if (!deliveryDetail) {
+      console.log("❌ DETENIDO: El campo 'Detalle' está vacío.");
+      setError(
+        'Por favor, especifique un detalle para la entrega (Transporte, Cliente, etc.)'
+      );
+      setTimeout(() => setError(''), 4000);
+      return;
+    }
+
+    console.log('✅ Validaciones pasadas. Intentando enviar...');
     setMessage('');
     setError('');
 
     try {
       const newOrder = {
         orderNumber: Number(orderNumber),
-        transport: normalizeTransport(transport), // Usamos el texto normalizado
+        transport: normalizeTransportString(deliveryType, deliveryDetail),
         packer,
+        packageCount: Number(packageCount),
+        isPallet,
       };
+
+      console.log('📦 Datos a enviar a la API:', newOrder);
+
       await apiClient.post('/orders', newOrder);
+
+      console.log('🎉 ¡Éxito! Pedido guardado en la API.');
       setMessage(`¡Pedido ${orderNumber} guardado con éxito!`);
 
-      // Limpiamos el formulario
       setOrderNumber('');
-      setTransport('');
-      if (!rememberPacker) {
-        setPacker('Alexis'); // Solo reseteamos el armador si no está marcado el check
-      }
+      setIsPallet(false);
+      setPackageCount(1);
+      if (!rememberPacker) setPacker('Alexis');
+      setIsDefaultDetail(true);
 
       if (onOrderCreated) {
         onOrderCreated();
       }
-
+      orderNumberInputRef.current?.focus();
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {
+      console.error('🔥 ERROR en la llamada a la API:', err.response || err);
       setError(err.response?.data?.message || 'No se pudo guardar el pedido.');
-      setTimeout(() => setError(''), 3000);
-    }
-  };
-
-  // 1) Lógica para el "Enter" en el campo de transporte
-  const handleTransportKeyDown = (e) => {
-    if (e.key === 'Enter' && rememberPacker) {
-      e.preventDefault(); // Evita el comportamiento por defecto del Enter
-      handleSubmit(e);
+      setTimeout(() => setError(''), 4000);
     }
   };
 
@@ -118,27 +146,83 @@ const OrderForm = ({ onOrderCreated }) => {
           <input
             type="number"
             id="orderNumber"
+            ref={orderNumberInputRef}
             value={orderNumber}
-            onChange={(e) => setOrderNumber(e.target.value)}
-            onBlur={handleOrderNumberBlur} // Verificamos al quitar el foco
+            onChange={handleOrderNumberChange}
+            onBlur={handleOrderNumberBlur}
             required
           />
           {duplicateError && (
             <p className="warning-message">{duplicateError}</p>
           )}
+          {orderNumberError && (
+            <p className="validation-error">{orderNumberError}</p>
+          )}
+        </div>
+
+        <div className="form-group-inline transport-group">
+          <div className="form-group">
+            <label>Tipo de Entrega</label>
+            <select
+              value={deliveryType}
+              onChange={(e) => setDeliveryType(e.target.value)}
+            >
+              <option value="Retira">Retira</option>
+              <option value="Reparto">Reparto</option>
+            </select>
+          </div>
+          <div className="form-group-checkbox transport-default-checkbox">
+            <input
+              type="checkbox"
+              id="isDefaultDetail"
+              checked={isDefaultDetail}
+              onChange={(e) => setIsDefaultDetail(e.target.checked)}
+            />
+            <label htmlFor="isDefaultDetail">
+              {deliveryType === 'Retira' ? 'Cliente Retira' : 'Reparto Propio'}
+            </label>
+          </div>
         </div>
         <div className="form-group">
-          <label htmlFor="transport">Transporte</label>
-          <input
-            type="text"
-            id="transport"
-            ref={transportInputRef}
-            value={transport}
-            onChange={(e) => setTransport(e.target.value)}
-            onKeyDown={handleTransportKeyDown} // Manejamos el Enter
-            required
+          <label htmlFor="deliveryDetail">
+            {isDefaultDetail
+              ? 'Detalle (Automático)'
+              : 'Detalle (Transporte, Comisionista, etc.)'}
+          </label>
+          <CreatableSelect
+            isClearable
+            id="deliveryDetail"
+            options={transportOptions}
+            value={deliveryDetail}
+            onChange={setDeliveryDetail}
+            placeholder="Escribe o selecciona..."
+            formatCreateLabel={(inputValue) => `Añadir "${inputValue}"`}
+            isDisabled={isDefaultDetail}
           />
         </div>
+
+        <div className="form-group-inline">
+          <div className="form-group">
+            <label htmlFor="packageCount">Cantidad</label>
+            <input
+              type="number"
+              id="packageCount"
+              value={packageCount}
+              onChange={(e) => setPackageCount(e.target.value)}
+              min="1"
+            />
+          </div>
+          <div className="form-group-checkbox pallet-checkbox">
+            <input
+              type="checkbox"
+              id="isPallet"
+              checked={isPallet}
+              onChange={(e) => setIsPallet(e.target.checked)}
+            />
+            <label htmlFor="isPallet">Marcar si son Pallets</label>
+          </div>
+        </div>
+
         <div className="form-group">
           <label htmlFor="packer">Armador</label>
           <select
@@ -168,7 +252,7 @@ const OrderForm = ({ onOrderCreated }) => {
         <button
           type="submit"
           className="btn-submit"
-          disabled={!!duplicateError}
+          disabled={!!duplicateError || !!orderNumberError}
         >
           Guardar Pedido
         </button>

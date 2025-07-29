@@ -74,3 +74,27 @@
   margin-top: 1rem;
   font-weight: 500;
 }
+.form-group-inline {
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* Divide el espacio para los campos en línea */
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.pallet-checkbox {
+  height: 100%;
+  padding-bottom: 0.8rem; /* Alinear con el input de al lado */
+}
+.form-group-inline.transport-group {
+  grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+  align-items: center; /* Centramos verticalmente */
+}
+
+.transport-default-checkbox {
+  padding-top: 1.5rem; /* Alineamos el checkbox con el label del otro campo */
+}
+.validation-error {
+  color: #dc3545; /* Rojo para errores de validación */
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}

@@ -12,11 +12,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // 👇 AÑADIMOS ESTE CAMPO
     role: {
       type: String,
-      enum: ['user', 'admin'], // Solo permite estos dos valores
-      default: 'user', // Por defecto, cualquier usuario nuevo será 'user'
+      enum: ['user', 'admin'],
+      default: 'user',
     },
   },
   {
