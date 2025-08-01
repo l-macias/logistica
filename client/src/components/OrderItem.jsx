@@ -61,7 +61,7 @@ const OrderItem = ({ order, onOrderDeleted, onOrderUpdated }) => {
         setDeliveryDetail(null);
       }
     }
-  }, [isDefaultDetail, deliveryType, isEditing]);
+  }, [isDefaultDetail, deliveryType, isEditing, deliveryDetail?.value]);
 
   const handleOrderNumberBlur = async () => {
     if (!editedOrderNumber || editedOrderNumber.toString().length !== 6)
